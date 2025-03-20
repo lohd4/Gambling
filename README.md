@@ -30,7 +30,7 @@ This project implements a fully functional Blackjack game with an intuitive user
   4. Functions
 
 ### Architecture Patterns
-- **API Interactions**: Class-based approach with method chaining
+- **API Interactions**: Object-based approach with method chaining
   ```typescript
   // Example
   DeckApi.deck.shuffle(deckId);
