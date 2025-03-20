@@ -1,7 +1,9 @@
 import type EndpointInterface from "$lib/types/interfaces/Endpoint";
+import PileEndpoint from "./pile/Pile";
 
-export default class DeckEndpoint implements EndpointInterface{
+export default class DeckEndpoint implements EndpointInterface {
     url: string;
+
     create = async (deckCount: number = 1, shuffled: boolean = false) => {
         const fetchUrl = `${this.url}/new${shuffled ? "/shuffle" : ""}/?deck_count=${deckCount}`;
 
@@ -69,11 +71,13 @@ export default class DeckEndpoint implements EndpointInterface{
         }
 
         return json;
-    } 
+    };
+
+    pile: PileEndpoint;
 
     constructor(url: string) {
         this.url = url + "/deck";
-        
+        this.pile = new PileEndpoint(this.url)
     };
 
 
