@@ -1,17 +1,14 @@
-import type ApiInterface from "$lib/types/interfaces/Api";
-import type EndpointInterface from "$lib/types/interfaces/Endpoint";
-import DeckEndpoint from "./deck/Deck";
+import DeckFactory from "./deck/DeckFactory";
 
-class DeckOfCardsApiClass implements ApiInterface {
+
+class DeckOfCardsApiClass {
     url: string = "https://deckofcardsapi.com/api";
-    deck: DeckEndpoint;
-    
-    constructor() {        
-        this.deck = new DeckEndpoint(this.url);
+    deck: DeckFactory['deck'];
 
-    };
-
-};
-  
+    constructor() {
+        const factory = new DeckFactory(this.url);
+        this.deck = factory.deck;
+    }
+}
 
 export const DeckOfCardsApi = new DeckOfCardsApiClass();

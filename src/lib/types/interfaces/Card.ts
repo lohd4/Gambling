@@ -6,3 +6,4 @@ export default interface CardInterface {
     suit: string,
     code: string
 }
+
