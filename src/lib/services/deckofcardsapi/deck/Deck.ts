@@ -1,84 +1,88 @@
-import type EndpointInterface from "$lib/types/interfaces/Endpoint";
-import PileEndpoint from "./pile/Pile";
+import type CardInterface from "$lib/types/interfaces/Card";
+import PileFactory from "./pile/PileFactory";
 
-export default class DeckEndpoint implements EndpointInterface {
+export interface DeckResponse {
+    "deck_id": string,
+    "remaining": number,
+    "shuffled": boolean,
+    "success": boolean
+}
+
+export default class DeckEndpoint {
     url: string;
+    pile: PileFactory['pile'];
 
-    create = async (deckCount: number = 1, shuffled: boolean = false) => {
-        const fetchUrl = `${this.url}/new${shuffled ? "/shuffle" : ""}/?deck_count=${deckCount}`;
+    shuffle = async (): Promise<DeckResponse> => {
+        const url = `${this.url}/shuffle`;
+        const response = await fetch(url);
 
-        const response = await fetch(fetchUrl);
-        
         if (!response.ok) {
-            alert("Creating deck failed!");
-            return;
+            throw new Error(`Request to url: ${url} failed!`);
         };
 
         const json = await response.json();
 
         if (!json.success) {
-            alert("Creating deck failed: " + json?.error);
-            return;
+            throw new Error(`Request to url: ${url} failed: ${json.error}`);
         };
 
         return json;
-    };
+    }
 
-    read = async (deckId: string) => {
-        const url = 
-            this.url + 
-            "/" + 
-            deckId;
-
+    draw = async (cardCount: number = 1): Promise<Array<CardInterface>> => {
+        const url = `${this.url}/draw/?count=${cardCount}`;
         const response = await fetch(url);
 
         if (!response.ok) {
-            alert("Reading deck failed!");
-            return;
+            throw new Error(`Request to url: ${url} failed!`);
         };
 
         const json = await response.json();
 
-        if (!json?.success) {
-            alert("Reading deck failed: " + json?.error);
-            return;
+        if (!json.success) {
+            throw new Error(`Request to url: ${url} failed: ${json.error}`);
         };
 
-        return json;
+        return json["cards"];
+    }
 
-    };
-
-    update = async (deckId: string, action: "shuffle" | "draw" ) => {
-        const url = 
-            this.url +
-            "/" +
-            deckId +
-            "/" +
-            action;
-
+    get = async (): Promise<DeckResponse> => {
+        const url = this.url;
         const response = await fetch(url);
 
         if (!response.ok) {
-            alert("Updating deck failed!");
-            return;
-        }
+            throw new Error(`Request to url: ${url} failed!`);
+        };
 
         const json = await response.json();
 
-        if (!json?.success) {
-            alert("Updating deck failed: " + json?.error);
-            return;
-        }
+        if (!json.success) {
+            throw new Error(`Request to url: ${url} failed: ${json.error}`)
+        };
 
         return json;
-    };
+    }
 
-    pile: PileEndpoint;
+    static new = async (baseUrl: string, deckCount: number): Promise<DeckResponse> => {
+        const url = `${baseUrl}/new/?deck_count=${deckCount}`;
+        const response = await fetch(url);
 
-    constructor(url: string) {
-        this.url = url + "/deck";
-        this.pile = new PileEndpoint(this.url)
-    };
+        if (!response.ok) {
+            throw new Error(`Request to url: ${url} failed!`);
+        };
 
+        const json = await response.json();
 
-};
+        if (!json.success) {
+            throw new Error(`Request to url: ${url} failed: ${json.error}`)
+        };
+
+        return json;
+    }
+
+    constructor(url: string, deckId: string) {
+        this.url = `${url}/deck/${deckId}/`;
+        const factory = new PileFactory(this.url);
+        this.pile = factory.pile;
+    }
+}

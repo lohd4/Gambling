@@ -1,82 +1,107 @@
 import type CardInterface from "$lib/types/interfaces/Card";
-import type EndpointInterface from "$lib/types/interfaces/Endpoint";
 
-export default class PileEndpoint implements EndpointInterface {
+
+
+export default class PileEndpoint {
     url: string;
 
-    create = async (deckId: string, pileName: string, cards: Array<CardInterface> = []) => {
+    add = async (cards: Array<CardInterface>) => {
         const cardsString = cards?.map((card: CardInterface) => card.code).join(",");
-
-        const url = `${this.url.replace("{deckId}", deckId)}/${pileName}/add/?cards=${cardsString}`;
-
+        const url = `${this.url}/add/?cards=${cardsString}`;
         const response = await fetch(url);
 
         if (!response.ok) {
-            alert("Creating pile failed!");
+            alert(`Request to url: ${url} failed!`);
             return;
         };
 
         const json = await response.json();
 
         if (!json.success) {
-            alert("Creating pile failed: " + json.error);
+            alert(`Request to url: ${url} failed: ${json.error}`)
+            return;
         };
 
-        return {
-            name: pileName,
-            ...json.piles[pileName]
-        };
+        return json;
     };
 
-    read = async (deckId: string, pileName: string) => {
-        const url = `${this.url.replace("{deckId}", deckId)}/${pileName}/list`;
-        
+    shuffle = async () => {
+        const url = `${this.url}/shuffle`;
         const response = await fetch(url);
 
         if (!response.ok) {
-            alert("Reading pile failed!");
+            alert(`Request to url: ${url} failed!`);
             return;
         };
 
         const json = await response.json();
 
         if (!json.success) {
-            alert("Rading pile failed: " + json.error);
+            alert(`Request to url: ${url} failed: ${json.error}`)
+            return;
         };
 
-        return {
-            name: pileName,
-            ...json.piles[pileName]
-        };
+        return json;
     };
 
-    update = async (deckId: string, pileName: string, action: "add" | "shuffle" | "draw", cards: Array<CardInterface> = []) => {
-        const cardsString = cards?.map((card: CardInterface) => card.code).join(",");
-
-        const url = `${this.url.replace("{deckId}", deckId)}/${pileName}/${action}/${cards.length > 0 ? `?cards=${cardsString}` : ""}`;
-
+    draw = async (cardCount: number = 1, option: "bottom" | "random" | "" = "") => {
+        const url = `${this.url}/draw/${option !== "" ? `/${option}/` : ""}?count=${cardCount}`;
         const response = await fetch(url);
 
         if (!response.ok) {
-            alert("Updating pile failed!");
+            alert(`Request to url: ${url} failed!`);
             return;
         };
 
         const json = await response.json();
 
         if (!json.success) {
-            alert("Updating pile failed: " + json.error);
+            alert(`Request to url: ${url} failed: ${json.error}`)
+            return;
         };
 
-        return {
-            name: pileName,
-            ...json.piles[pileName]
-        };
+        return json;
     }
 
+    get = async () => {
+        const url = `${this.url}/list`;
+        const response = await fetch(url);
 
-    constructor(url: string) {
-        this.url = url + "/{deckId}/pile";
+        if (!response.ok) {
+            alert(`Request to url: ${url} failed!`);
+            return;
+        };
+
+        const json = await response.json();
+
+        if (!json.success) {
+            alert(`Request to url: ${url} failed: ${json.error}`)
+            return;
+        };
+
+        return json;
     };
 
+    static new = async (baseUrl: string, pileName: string) => {
+        const url = `${baseUrl}/pile/${pileName}/add/?cards`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            alert(`Request to url: ${url} failed!`);
+            return;
+        };
+
+        const json = await response.json();
+
+        if (!json.success) {
+            alert(`Request to url: ${url} failed: ${json.error}`)
+            return;
+        };
+
+        return json;
+    };
+
+    constructor(url: string, pileName: string) {
+        this.url = `${url}/pile/${pileName}/`;
+    };
 }
