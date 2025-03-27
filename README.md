@@ -16,6 +16,7 @@ This project implements a fully functional Blackjack game with an intuitive user
 ## Code Conventions
 
 ### Naming Conventions
+- **Branches** type/teamname/ticketid-description (feature/ bugfix/, hotfix/, release/, etc.)
 - **Classes**: PascalCase (`PlayerHand`, `DealerScore`)
 - **Variables**: camelCase (`deckService`, `gameStore`)
 - **Functions**: Arrow functions when possible
