@@ -3,9 +3,9 @@
   import { fade } from "svelte/transition";
   import { gameStore } from "$lib/stores/gameStore";
   import { StatePersistenceService } from "$lib/services/persistence/StatePersistence";
-  import Dealer from "./Dealer.svelte";
-  import Player from "./Player.svelte";
-  import Actions from "./Actions.svelte";
+  import Dealer from "../game/Dealer";
+  import Player from "../game/Player";
+  // import Actions from "./Actions.svelte";
   import GameStateFeedback from "./GameStateFeedback.svelte";
 
   let isInitializing = true;
@@ -41,13 +41,10 @@
 </script>
 
 <div class="blackjack-table">
-  <Dealer />
 
   <div class="player-area">
-    <Player />
   </div>
 
-  <Actions />
 
   {#if isRestoringState}
     <div class="state-restore-notice" transition:fade>
