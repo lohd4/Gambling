@@ -1,38 +1,128 @@
-# sv
+# Blackjack Card Game
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A modern Blackjack card game built with SvelteKit and TypeScript, using the DeckOfCards API for card management.
 
-## Creating a project
+## Project Overview
 
-If you're seeing this, you've probably already done this step. Congrats!
+This project implements a fully functional Blackjack game with an intuitive user interface. The game follows standard Blackjack rules, allowing players to hit, stand, double down, and split pairs while playing against a dealer who follows conventional house rules.
 
-```bash
-# create a new project in the current directory
-npx sv create
+## Tech Stack
 
-# create a new project in my-app
-npx sv create my-app
+- **Framework**: SvelteKit
+- **Language**: TypeScript
+- **API**: [Deck of Cards API](https://deckofcardsapi.com)
+- **Styling**: CSS (no frameworks)
+
+## Code Conventions
+
+### Naming Conventions
+- **Branches** type/teamname/ticketid-description (feature/ bugfix/, hotfix/, release/, etc.)
+- **Classes**: PascalCase (`PlayerHand`, `DealerScore`)
+- **Variables**: camelCase (`deckService`, `gameStore`)
+- **Functions**: Arrow functions when possible
+
+### Syntax Preferences
+- **Strings**: Double quotes (`"example"`) instead of single quotes
+- **Statements**: Semicolons required
+- **Code Organization**:
+  1. Imports
+  2. Exports
+  3. Definitions
+  4. Functions
+
+### Architecture Patterns
+- **API Interactions**: Object-based approach with method chaining
+  ```typescript
+  // Example
+  DeckApi.deck.shuffle(deckId);
+  DeckApi.deck.cards.draw(deckId, count);
+  ```
+
+- **State Management**: Class-based Svelte stores
+  ```typescript
+  // Example
+  export class GameStore extends writable<GameState> {
+    constructor() {
+      super(initialState);
+    }
+    
+    startNewGame = () => {
+      // Implementation
+    };
+  }
+  ```
+
+## Project Structure
+
+```
+src/
+├── lib/
+│   ├── services/
+│   │   └── apiname/
+│   │       ├── ApiName.ts          # Class Based Api Implementation
+│   │       └── endpointname/
+│   │           └── EndpointName.ts # Class Based Api Endpoint
+│   ├── components/
+│   │   ├── Card.svelte             # Card display component
+│   │   ├── Hand.svelte             # Hand display component
+│   │   ├── Dealer.svelte           # Dealer component
+│   │   ├── Player.svelte           # Player component
+│   │   ├── Actions.svelte          # Game action buttons
+│   │   └── Table.svelte            # Main game table
+│   ├── stores/
+│   │   ├── gameStore.ts            # Game state management
+│   │   └── playerStore.ts          # Player state management
+│   └── utils/
+│       ├── cardUtils.ts            # Card calculation utilities
+│       └── gameRules.ts            # Blackjack rules implementation
+├── routes/
+│   ├── +page.svelte                # Main game page
+│   └── +layout.svelte              # App layout
+├── app.html                        # HTML template
+└── app.css                         # Global styles
 ```
 
-## Developing
+## Getting Started
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Prerequisites
 
-```bash
-npm run dev
+- Node.js (v16+)
+- npm or yarn
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+### Installation
 
-## Building
+1. Clone the repository
+   ```bash
+   git clone https://github.com/yourusername/blackjack-card-game.git
+   cd blackjack-card-game
+   ```
 
-To create a production version of your app:
+2. Install dependencies
+   ```bash
+   npm install
+   # or
+   yarn
+   ```
 
-```bash
-npm run build
-```
+3. Start the development server
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-You can preview the production build with `npm run preview`.
+4. Open your browser to `http://localhost:5173`
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## Development Guidelines
+
+- Follow the established naming and coding conventions
+- Create unit tests for game logic and utilities
+- Ensure responsive design for both desktop and mobile
+- Keep the UI clean and intuitive
+- Handle API errors gracefully
+- Implement proper state management
+
+## Acknowledgments
+
+- [Deck of Cards API](https://deckofcardsapi.com) for providing the card deck functionality
+- The SvelteKit team for the excellent framework
