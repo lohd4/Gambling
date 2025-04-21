@@ -1,9 +1,25 @@
 <script lang="ts">
-  import Table from "$lib/components/Table.svelte";
+  import Blackjack from "$lib/game/Blackjack";
+  let gameHasStarted = false;
+  let startingMoney = 1000;
+
+  const startGame = (startingMoney: number) => {
+    const blackJack = new Blackjack(startingMoney)
+    blackJack.init().then(() => {
+      
+    })
+  }
+
 </script>
 
 <main>
-  <Table />
+  {#if !gameHasStarted}
+  <div>  
+    <button onclick={() => startGame(startingMoney)}>Start Game</button>
+    <div>Starting Amount {startingMoney}</div>
+    <Slider value={startingMoney} max={10000} min={100} step={100} />
+  </div>
+    {/if}
 </main>
 
 <style>

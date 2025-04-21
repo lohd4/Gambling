@@ -32,6 +32,29 @@ export interface GameStateSnapshot {
     timestamp: number;
 }
 
+export const defaultGameState: GameStateSnapshot = {
+    playerHands: [
+      {
+        cards: [],
+        score: 0,
+        isBusted: false,
+        isStanding: false
+      }
+    ],
+    dealerHand: {
+      cards: [],
+      score: 0,
+      isBusted: false,
+      hideFirstCard: true
+    },
+    currentBet: 0,
+    chips: 1000,
+    deckId: "",
+    gameStatus: "betting",
+    currentHandIndex: 0,
+    timestamp: Date.now()
+  };
+
 export class StatePersistenceService {
     private static STORAGE_KEY = "blackjack_game_state";
     private static LAST_SAVE_TIME_KEY = "blackjack_last_save";
